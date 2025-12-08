@@ -14,7 +14,6 @@ export default function SignaturePreviewModal({ isOpen, onClose, image, onBack }
     const newSignature = { id: Date.now().toString(), image: imgURL, createdAt: Date.now(), format: "png" };
     existing.push(newSignature);
     localStorage.setItem(key, JSON.stringify(existing));
-    // optional: provide feedback (toast) — omitted for brevity
   };
 
   const downloadSignature = () => {
@@ -52,7 +51,6 @@ export default function SignaturePreviewModal({ isOpen, onClose, image, onBack }
       link.click();
     };
     img.onerror = () => {
-      // fallback: if image can't load, still try to download original blob-url
       const link = document.createElement("a");
       link.href = image;
       link.download = `signature.${format}`;
@@ -94,7 +92,10 @@ export default function SignaturePreviewModal({ isOpen, onClose, image, onBack }
         </div>
 
         <div className="flex gap-2">
-          <button onClick={() => saveToLibrary(image)} className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Save to Library</button>
+          <button onClick={() =>  {
+            saveToLibrary(image);
+            onClose();
+          }} className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Save to Library</button>
           <button onClick={downloadSignature} className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Download {format.toUpperCase()}</button>
         </div>
       </div>
