@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Header({ }) {
+export default function Header() {
   return (
     <header className="w-full bg-white shadow px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0">
       
