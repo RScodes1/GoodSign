@@ -1,5 +1,5 @@
 # Good Sign
-- Create digital signatures and apply them to your documents
+  Create digital signatures and apply them to your documents
 
 ## 1. Project Setup
 
