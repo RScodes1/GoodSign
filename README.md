@@ -37,7 +37,7 @@ Runs frontend on http://localhost:3000
 -Other libs: React Pdf, Pdf-Lib
 -Cloud deployment - Frontend on Vercel 
 
-## ⚖️ 4. Decisions & Assumptions
+##  4. Decisions & Assumptions
 
 ### Key design decisions
 
