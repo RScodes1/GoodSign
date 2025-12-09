@@ -16,7 +16,6 @@ export function useAppliedSignature(initial = null) {
 
   const applySignature = async (sigPayload) => {
 
-    // 🔥 HANDLE DELETE CASE FIRST
     if (!sigPayload) {
       setAppliedSignature(null);
       return;
@@ -24,7 +23,6 @@ export function useAppliedSignature(initial = null) {
 
     const normalized = await normalizeSignature(sigPayload);
 
-    // If signature failed to load, clear it
     if (!normalized) {
       setAppliedSignature(null);
       return;

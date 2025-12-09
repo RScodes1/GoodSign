@@ -42,13 +42,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* HEADER */}
+
       <Header />
 
-      {/* Hidden uploader */}
       <DocumentUploadHandler onFileSelected={handleUploadDocument} />
 
-      {/* Document Editor */}
       {showEditor && uploadedDocument && (
         <div className="flex-1 flex justify-center items-start p-4 w-full h-full">
           <DocumentEditor
@@ -67,7 +65,6 @@ export default function Home() {
     justify-center items-start
   ">
 
-    {/* LEFT SECTION — Hero */}
     <div className="
       flex-1 max-w-2xl 
       flex flex-col items-center text-center
@@ -77,8 +74,8 @@ export default function Home() {
       </h1>
 
       <p className="text-gray-600 mt-4 text-lg max-w-xl">
-        Upload PDFs or images, add your signature, drag, resize,
-        and export professionally — right in your browser.
+        Upload PDFs or images, add your signature, drag
+        and export professionally.
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 mt-8">
@@ -102,7 +99,7 @@ export default function Home() {
         <div className="bg-white p-6 rounded-xl shadow">
           <h3 className="font-semibold text-lg">Upload Any Document</h3>
           <p className="text-gray-600 mt-2 text-sm">
-            PDF, PNG, JPG — all major formats supported.
+            PDF, PNG, JPG - all major formats supported.
           </p>
         </div>
 
@@ -122,8 +119,6 @@ export default function Home() {
       </div>
     </div>
 
-
-    {/* RIGHT SECTION — Saved Signatures */}
     <div className="
       w-full lg:w-60 
       bg-white rounded-xl shadow p-4 

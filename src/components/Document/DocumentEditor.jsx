@@ -23,18 +23,9 @@ export default function DocumentEditor({ file, onBack, openSignatureModal }) {
   const [contentWidth, setContentWidth] = useState(0);
   const [contentHeight, setContentHeight] = useState(0);
 
-  // Use the appliedSignature hook
   const { appliedSignature, position, setPosition, size, page: sigPage, setPage: setSigPage, applySignature } = useAppliedSignature();
 
   const scale = useFitScale(containerRef, contentWidth, contentHeight);
-
-  const normalizeSignature = async (sig) => {
-    if (!sig) return null;
-    if (typeof sig === "string") return sig;
-    if (sig instanceof File || sig instanceof Blob) return URL.createObjectURL(sig);
-    if (sig.image) return normalizeSignature(sig.image);
-    return null;
-  };
 
   // Load PDF or image
   useEffect(() => {
@@ -69,7 +60,6 @@ export default function DocumentEditor({ file, onBack, openSignatureModal }) {
       });
     }
 
-    // If the file has a signature, apply it
     (async () => {
       if (file.appliedSignature) {
         await applySignature(file.appliedSignature);
@@ -77,7 +67,6 @@ export default function DocumentEditor({ file, onBack, openSignatureModal }) {
     })();
   }, [file]);
 
-  // Render PDF or image
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -201,7 +190,6 @@ export default function DocumentEditor({ file, onBack, openSignatureModal }) {
                 onClick={e => { 
                   e.stopPropagation();
                   applySignature(null); 
-                  // handleDeleteSignature()
                 }} 
                 className="absolute -top-3 -right-3 bg-red-600 text-white rounded w-6 h-6 flex items-center justify-center hover:bg-red-700 shadow"
               >×</button>
