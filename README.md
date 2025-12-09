@@ -1,70 +1,136 @@
-# Getting Started with Create React App
+# Good Sign
+- Create digital signatures and apply them to your documents
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 1. Project Setup
 
-## Available Scripts
+### a. Prerequisites
+- React.js version: `19.2.0`
+- API Keys: Remove BG - API KEY (For using the api to remove the background)
 
-In the project directory, you can run:
+### b. Installation Steps
 
-### `npm start`
+#### Frontend
+```bash
+npm install
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#### Environment Variables
+```bash
+REACT_APP_REMOVE_BG_KEY=***************************
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### c. Running Locally
+```bash 
+- Frontend
+cd frontend
+npm run start
 
-### `npm test`
+Runs frontend on http://localhost:3000
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 2. Tech Stack
 
-### `npm run build`
+### Frontend, Backend, DB, AI
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+-Frontend: React, Tailwind CSS, Create React App (CRA), 
+-Drag & Drop: React Draggable
+-Other libs: React Pdf, Pdf-Lib
+-Cloud deployment - Frontend on Vercel 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## ⚖️ 4. Decisions & Assumptions
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Key design decisions
 
-### `npm run eject`
+**Signature Creation Flow**
+-Users create signatures using three methods: Draw, Type, or Upload.
+-Final preview modal allows resizing, choosing format (PNG/JPG), and downloading.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+**Local Signature Library**
+-Signatures are stored in browser localStorage so users can see, download, and re-use them anytime.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+**Instant UI Sync**
+-addSignature triggers a store update, Home re-renders automatically.
+-No parent-to-child props drilling; centralized store prevents stale UI.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+**Download Handling**
+-Canvas-based resizing preserves aspect ratio.
+-JPG generation forces a white background to avoid transparency issues.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Implementation assumptions
 
-## Learn More
+**Signature format**
+-All base signatures (drawn, typed, uploaded) are converted to DataURL (image/png) before saving.
+-A unique ID is generated for each signature.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**No backend required**
+-Everything runs client-side (by assignment requirement).
+-Signatures stored in localStorage, so persistence is browser-bound.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**Users may revisit the app**
+-Home page loads all existing signatures on mount.
+-Deleting or adding signatures updates localStorage immediately.
 
-### Code Splitting
+**Document Upload Flow**
+-Using a signature on a PDF happens via a separate screen, but the signature library is accessible independently.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 5. AI Tools Usage
 
-### Analyzing the Bundle Size
+### Tools used
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+**ChatGPT**
+-UI flow design
+-Debugging errors (circular JSON, stale UI, prop drilling issues)
+-Creating responsive modals, canvas logic, and store architecture
 
-### Making a Progressive Web App
+### How AI helped 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+**Designed clean component structure:**
+-SignatureCreator → SignaturePreviewModal → SignatureLibrary
+-Suggested using a global store (React Context) to make signatures instantly appear after saving.
 
-### Advanced Configuration
+**Helped debug:**
+-Delayed re-renders when saving signatures
+-Canvas resizing and aspect-ratio logic
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+**Provided reusable logic for:**
+converting DataURL to downloadable PNG/JPG
+localStorage CRUD operations
+modal UX improvements (back, save, download)
 
-### Deployment
+### Notable prompts / approaches
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+-How to update a global signature list instantly from inside a modal
+-Create a signature preview modal with PNG/JPG download options”
+-Canvas resize while keeping aspect ratio centered”
 
-### `npm run build` fails to minify
+### Learnings
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+-Centralized state management solves re-render issues when multiple modals depend on shared data.
+-Canvas export logic needs careful format handling (PNG transparency vs JPG white background).
+-UI responsiveness improves drastically when:
+    - storing signatures globally
+    - separating preview vs final save
+
+## Repo Structure
+```bash
+/frontend
+  /src
+    /components
+      /Document
+        DocumentEditor.jsx
+        DocumentUploaderHandler.jsx
+      /Modals
+        CreateSignatureModal.jsx
+        SignaturePickerModal.jsx
+        SignaturePreviewModal.jsx
+      Header.jsx
+    /hooks
+      useAppliedSignature.js
+      useFitScale.js
+      useSignatures
+    /pages
+      Home.js
+    App.js
+    index.css
+    index.js
+```
