@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export function useAppliedSignature(initial = null) {
   const [appliedSignature, setAppliedSignature] = useState(initial);
@@ -7,7 +7,7 @@ export function useAppliedSignature(initial = null) {
   const [page, setPage] = useState(1);
 
   const normalizeSignature = async (sig) => {
-    if (!sig) return null;
+    if (!sig) return null; // keep null as null
     if (typeof sig === "string") return sig;
     if (sig instanceof File || sig instanceof Blob) return URL.createObjectURL(sig);
     if (sig.image) return normalizeSignature(sig.image);
@@ -15,8 +15,20 @@ export function useAppliedSignature(initial = null) {
   };
 
   const applySignature = async (sigPayload) => {
+
+    // 🔥 HANDLE DELETE CASE FIRST
+    if (!sigPayload) {
+      setAppliedSignature(null);
+      return;
+    }
+
     const normalized = await normalizeSignature(sigPayload);
-    if (!normalized) return;
+
+    // If signature failed to load, clear it
+    if (!normalized) {
+      setAppliedSignature(null);
+      return;
+    }
 
     setAppliedSignature(normalized);
     setPage(sigPayload?.page ?? page);
@@ -24,5 +36,14 @@ export function useAppliedSignature(initial = null) {
     setSize(sigPayload?.size ?? { width: 120, height: 60 });
   };
 
-  return { appliedSignature, position, setPosition, size, setSize, page, setPage, applySignature };
+  return {
+    appliedSignature,
+    position,
+    setPosition,
+    size,
+    setSize,
+    page,
+    setPage,
+    applySignature,
+  };
 }

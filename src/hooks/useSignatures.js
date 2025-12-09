@@ -18,7 +18,7 @@ export function useSignatures() {
       format: "png",
     };
     const updated = [...signatures, newSig];
-    setSignatures(updated);
+     setSignatures(signatures => [newSig, ...signatures]);
     localStorage.setItem(SIGNATURES_KEY, JSON.stringify(updated));
   };
 

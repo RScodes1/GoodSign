@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 
 import CreateSignatureModal from "../components/Modals/CreateSignatureModal";
@@ -7,6 +7,7 @@ import SignaturePickerModal from "../components/Modals/SignaturePickerModal";
 
 import DocumentUploadHandler from "../components/Document/DocumentUploadHandler";
 import DocumentEditor from "../components/Document/DocumentEditor";
+import { useSignatures } from "../hooks/useSignatures";
 
 export default function Home() {
 
@@ -15,29 +16,11 @@ export default function Home() {
   const [isSignaturePickerOpen, setIsSignaturePickerOpen] = useState(false);
 
   const [signatureImage, setSignatureImage] = useState(null);
-  const [savedSignatures, setSavedSignatures] = useState([]);
 
-  // ---------- Document workflow ----------
   const [uploadedDocument, setUploadedDocument] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
+  const { signatures, addSignature, removeSignature } = useSignatures();
 
-  // Load saved signatures
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("goodsign_signatures") || "[]");
-    setSavedSignatures(saved);
-  }, []);
-
-  const handleDeleteSignature = (id) => {
-  const updated = savedSignatures.filter(sig => sig.id !== id);
-  setSavedSignatures(updated);
-  localStorage.setItem("goodsign_signatures", JSON.stringify(updated));
-};
-
-  const saveSignatureToStorage = (signature) => {
-    const updated = [...savedSignatures, signature];
-    setSavedSignatures(updated);
-    localStorage.setItem("goodsign_signatures", JSON.stringify(updated));
-  };
 
   const handleUploadDocument = async (file) => {
     const arrayBuffer = await file.arrayBuffer();
@@ -76,69 +59,130 @@ export default function Home() {
         </div>
       )}
 
-      {/* MAIN LANDING PAGE CONTENT */}
-      {!showEditor && (
-        <div className="flex flex-col items-center text-center px-6 mt-10">
-          <h1 className="text-4xl font-extrabold text-gray-800">
-            Sign Documents Effortlessly
-          </h1>
+         {!showEditor && (
+  <div className="
+    w-full px-6 mt-20
+    flex flex-col lg:flex-row 
+    gap-10 lg:gap-20 
+    justify-center items-start
+  ">
 
-          <p className="text-gray-600 mt-3 max-w-lg">
-            Upload your PDFs or images, add your signature, drag, resize, and export
-            professionally - all in your browser.
+    {/* LEFT SECTION — Hero */}
+    <div className="
+      flex-1 max-w-2xl 
+      flex flex-col items-center text-center
+    ">
+      <h1 className="text-5xl font-extrabold text-gray-800 leading-snug">
+        Sign Documents Effortlessly
+      </h1>
+
+      <p className="text-gray-600 mt-4 text-lg max-w-xl">
+        Upload PDFs or images, add your signature, drag, resize,
+        and export professionally — right in your browser.
+      </p>
+
+      <div className="flex flex-col sm:flex-row gap-4 mt-8">
+        <button
+          onClick={() => setIsCreateOpen(true)}
+          className="px-8 py-3 bg-green-600 text-white hover:bg-green-700 rounded-xl"
+        >
+          Create Signature
+        </button>
+
+        <button
+          onClick={() => document.getElementById("doc-upload")?.click()}
+          className="px-8 py-3 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700"
+        >
+          Upload Document
+        </button>
+      </div>
+
+      {/* Features */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-14 w-full max-w-3xl">
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="font-semibold text-lg">Upload Any Document</h3>
+          <p className="text-gray-600 mt-2 text-sm">
+            PDF, PNG, JPG — all major formats supported.
           </p>
+        </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 mt-8">
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="font-semibold text-lg">Drag & Resize</h3>
+          <p className="text-gray-600 mt-2 text-sm">
+            Position and scale signatures easily.
+          </p>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="font-semibold text-lg">High-Quality Export</h3>
+          <p className="text-gray-600 mt-2 text-sm">
+            Export signed PDFs or images in great clarity.
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+    {/* RIGHT SECTION — Saved Signatures */}
+    <div className="
+      w-full lg:w-60 
+      bg-white rounded-xl shadow p-4 
+      h-[500px] overflow-y-auto
+      flex-shrink-0
+    ">
+      <h2 className="text-xl font-bold mb-4 text-center">Saved Signatures</h2>
+
+      {signatures.length === 0 ? (
+        <p className="text-gray-500 text-center text-sm">No saved signatures yet.</p>
+      ) : (
+        <div className="grid grid-cols-1 gap-4">
+          {signatures.map(sig => (
+            <div
+              key={sig.id}
+              className="bg-gray-50 p-3 rounded-xl shadow relative flex flex-col items-center"
+            >
+              {/* delete */}
               <button
-              onClick={() => setIsCreateOpen(true)}
-              className="px-6 py-3 bg-green-600 text-white hover:bg-green-700 rounded-xl hover:bg-gray-300"
-            >
-              Create Signature
-            </button>
+                onClick={() => removeSignature(sig.id)}
+                className="absolute top-1 right-1 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-700"
+              >
+                ×
+              </button>
 
-            <button
-              onClick={() => document.getElementById("doc-upload")?.click()}
-              className="px-6 py-3 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700"
-            >
-              Upload Document
-            </button>
+              {/* signature preview */}
+              <img
+                src={sig.image}
+                alt="signature"
+                className="w-full h-20 object-contain"
+              />
 
-          
-          </div>
-
-          {/* Features */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-14 max-w-4xl">
-            <div className="bg-white p-6 rounded-xl shadow">
-              <h3 className="font-semibold text-lg">Upload Any Document</h3>
-              <p className="text-gray-600 mt-2 text-sm">
-                PDF, PNG, JPG - GoodSign supports all major formats.
-              </p>
+              {/* download */}
+              <button
+                className="mt-2 w-full bg-blue-600 text-white py-1 rounded hover:bg-blue-700"
+                onClick={() => {
+                  const a = document.createElement("a");
+                  a.href = sig.image;
+                  a.download = `signature-${sig.id}.png`;
+                  a.click();
+                }}
+              >
+                Download
+              </button>
             </div>
-
-            <div className="bg-white p-6 rounded-xl shadow">
-              <h3 className="font-semibold text-lg">Drag & Resize Signature</h3>
-              <p className="text-gray-600 mt-2 text-sm">
-                Easily position and scale your signature anywhere.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow">
-              <h3 className="font-semibold text-lg">Export High Quality</h3>
-              <p className="text-gray-600 mt-2 text-sm">
-                Export signed PDFs or images with top-notch clarity.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       )}
+    </div>
 
-      {/* Signature Picker */}
-   <SignaturePickerModal
+  </div>
+)}
+
+  <SignaturePickerModal
         isOpen={isSignaturePickerOpen}
-        signatures={savedSignatures}
+        signatures={signatures}
         onClose={() => setIsSignaturePickerOpen(false)}
         onSelect={handleSelectSignature}
-        onDelete={handleDeleteSignature} 
+        onDelete={removeSignature}
       />
 
 
@@ -161,7 +205,9 @@ export default function Home() {
           setIsPreviewOpen(false);
           setIsCreateOpen(true);
         }}
-        onSaveFinal={(img) => saveSignatureToStorage(img)}
+        onSaveFinal={(img) => {
+           addSignature(img);  
+        }} 
       />
     </div>
   );

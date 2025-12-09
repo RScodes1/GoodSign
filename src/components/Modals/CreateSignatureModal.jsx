@@ -197,7 +197,7 @@ export default function CreateSignatureModal({
               <select
                 value={selectedFont}
                 onChange={(e) => setSelectedFont(e.target.value)}
-                className="border border-gray-300 rounded-md p-2"
+                className="border border-gray-300 rounded-md w-22 p-2"
               >
                 <option>Select Font</option>
                 <option>Allura</option>
@@ -212,7 +212,7 @@ export default function CreateSignatureModal({
               <select
                 value={selectedWeight}
                 onChange={(e) => setSelectedWeight(e.target.value)}
-                className="border border-gray-300 rounded-md p-2"
+                className="border border-gray-300 rounded-md p-2 w-18"
               >
                 <option value="400">Regular</option>
                 <option value="500">Medium</option>
@@ -223,7 +223,7 @@ export default function CreateSignatureModal({
                 type="number"
                 value={fontSize}
                 onChange={(e) => setFontSize(e.target.value)}
-                className="border border-gray-300 rounded-md p-2 w-20"
+                className="border border-gray-300 rounded-md p-2 w-16"
                 placeholder="Size"
               />
               <input

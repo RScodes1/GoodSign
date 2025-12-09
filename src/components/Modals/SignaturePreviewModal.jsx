@@ -1,23 +1,13 @@
 import React, { useState } from "react";
-import { useSignatures } from "../../hooks/useSignatures";
 
-export default function SignaturePreviewModal({ isOpen, onClose, image, onBack }) {
+export default function SignaturePreviewModal({ isOpen, onClose, image, onBack, onSaveFinal }) {
   const [format, setFormat] = useState("png");
   const [resolution, setResolution] = useState("600x200");
   const [customWidth, setCustomWidth] = useState("");
   const [customHeight, setCustomHeight] = useState("");
 
-  // Use the custom hook for saved signatures
-  const { addSignature } = useSignatures();
 
   if (!isOpen) return null;
-
-  const saveToLibrary = () => {
-    if (image) {
-      addSignature(image); // use the hook
-      onClose();
-    }
-  };
 
   const downloadSignature = () => {
     let width = 600,
@@ -157,7 +147,7 @@ export default function SignaturePreviewModal({ isOpen, onClose, image, onBack }
 
         <div className="flex gap-2">
           <button
-            onClick={saveToLibrary}
+            onClick={() => onSaveFinal(image)}
             className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
           >
             Save to Library

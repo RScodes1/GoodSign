@@ -13,6 +13,7 @@ export default function DocumentEditor({ file, onBack, openSignatureModal }) {
   const signatureRef = useRef(null);
   const prevFileNameRef = useRef(null);
   const renderTaskRef = useRef(null);
+  
 
   const [pdfDoc, setPdfDoc] = useState(null);
   const [page, setPage] = useState(1);
@@ -197,7 +198,11 @@ export default function DocumentEditor({ file, onBack, openSignatureModal }) {
               className="relative"
             >
               <button
-                onClick={e => { e.stopPropagation(); applySignature(null); }}
+                onClick={e => { 
+                  e.stopPropagation();
+                  applySignature(null); 
+                  // handleDeleteSignature()
+                }} 
                 className="absolute -top-3 -right-3 bg-red-600 text-white rounded w-6 h-6 flex items-center justify-center hover:bg-red-700 shadow"
               >×</button>
               <img src={appliedSignature} alt="signature" style={{ width: "100%", height: "100%" }} />
