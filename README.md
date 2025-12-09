@@ -4,7 +4,7 @@
 ## 1. Project Setup
 
 ### a. Prerequisites
-- React.js version: `19.2.0`
+- React.js version: `18.2.0`
 - API Keys: Remove BG - API KEY (For using the api to remove the background)
 
 ### b. Installation Steps
